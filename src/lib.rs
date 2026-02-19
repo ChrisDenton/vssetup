@@ -34,7 +34,7 @@ mod defs;
 use defs::*;
 
 mod raw;
-pub use raw::*;
+use raw::*;
 
 pub mod com;
 
