@@ -1,6 +1,6 @@
 [package]
 name = "vssetup"
-description = "Tools for interacting with the Visual Studio installer "
+description = "Tools for interacting with the Visual Studio installer"
 version = "0.2.1"
 edition = "2021"
 license = "MIT"
