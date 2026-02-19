@@ -8,6 +8,11 @@
 
 use windows_core::HRESULT;
 
+/// Runs the given function with COM initalized and uninitalizes COM afterward.
+///
+/// # Safety
+///
+/// See [`uninitialize`].
 pub unsafe fn with_com<R, F: FnOnce() -> R>(f: F) -> Result<R, HRESULT> {
     initialize()?;
     let result = f();

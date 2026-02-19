@@ -100,6 +100,13 @@ impl<'a> WideStr<'a> {
         }
     }
 
+    /// Create a `WideStr` from a pointer without checking for null termination.
+    ///
+    /// If the pointer is null then `None` will be returned.
+    ///
+    /// # Safety
+    ///
+    /// The pointer must either be null or a pointer to a null-terminated string.
     pub const unsafe fn from_ptr(ptr: *const u16) -> Option<Self> {
         if let Some(ptr) = NonNull::new(ptr.cast_mut()) {
             Some(Self {
@@ -151,6 +158,13 @@ impl PartialEq<BSTR> for WideStr<'_> {
     }
 }
 
+/// The entry point for these APIs.
+///
+/// # Example
+///
+/// ```rust
+/// let setup = SetupConfiguration::new()?;
+/// ```
 pub struct SetupConfiguration {
     raw: ISetupConfiguration,
 }
