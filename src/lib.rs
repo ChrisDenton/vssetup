@@ -163,7 +163,10 @@ impl PartialEq<BSTR> for WideStr<'_> {
 /// # Example
 ///
 /// ```rust
-/// let setup = SetupConfiguration::new()?;
+/// # fn main() -> Result<(), vssetup::HRESULT> {
+/// # vssetup::com::initialize();
+/// let setup = vssetup::SetupConfiguration::new()?;
+/// # Ok(()) }
 /// ```
 pub struct SetupConfiguration {
     raw: ISetupConfiguration,
