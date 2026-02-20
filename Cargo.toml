@@ -26,3 +26,6 @@ default-features = false
 [package.metadata.docs.rs]
 default-target = "x86_64-pc-windows-msvc"
 targets = []
+
+[workspace]
+members = ["crates/install-msvc"]
