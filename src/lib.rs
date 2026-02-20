@@ -41,12 +41,13 @@ pub mod com;
 pub use windows_result::HRESULT;
 pub use windows_strings::BSTR;
 
+pub use defs::FILETIME;
 pub use defs::Variant;
 
 use core::marker::PhantomData;
 use core::ops::Deref;
-use core::ptr::null_mut as null;
 use core::ptr::NonNull;
+use core::ptr::null_mut as null;
 use windows_core::Interface;
 use windows_core::{GUID, PCWSTR};
 
@@ -228,9 +229,13 @@ impl SetupConfiguration {
         }
     }
 
+    /// # Safety
+    ///
+    /// The pointer must be a valid ISetupConfiguration COM pointer.
     unsafe fn from_raw(raw: NonNull<core::ffi::c_void>) -> Self {
         Self {
-            raw: ISetupConfiguration::from_raw(raw.as_ptr()),
+            // SAFETY: the caller must make sure this is safe.
+            raw: unsafe { ISetupConfiguration::from_raw(raw.as_ptr()) },
         }
     }
 
@@ -1027,11 +1032,7 @@ trait OkHresult {
 }
 impl OkHresult for HRESULT {
     fn ok_hresult(self) -> Result<(), HRESULT> {
-        if self.is_ok() {
-            Ok(())
-        } else {
-            Err(self)
-        }
+        if self.is_ok() { Ok(()) } else { Err(self) }
     }
 }
 

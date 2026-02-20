@@ -16,7 +16,8 @@ use windows_core::HRESULT;
 pub unsafe fn with_com<R, F: FnOnce() -> R>(f: F) -> Result<R, HRESULT> {
     initialize()?;
     let result = f();
-    uninitialize();
+    // SAFETY: the caller must ensure this is safe.
+    unsafe { uninitialize() };
     Ok(result)
 }
 
@@ -25,11 +26,7 @@ pub unsafe fn with_com<R, F: FnOnce() -> R>(f: F) -> Result<R, HRESULT> {
 /// This needs to be called before any COM objects are created or used.
 pub fn initialize() -> Result<(), HRESULT> {
     let result = unsafe { CoInitializeEx(core::ptr::null(), 0) };
-    if result.is_ok() {
-        Ok(())
-    } else {
-        Err(result)
-    }
+    if result.is_ok() { Ok(()) } else { Err(result) }
 }
 
 /// Unitialize COM.

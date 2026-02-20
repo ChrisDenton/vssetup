@@ -1,14 +1,21 @@
+use core::fmt;
 use core::mem::ManuallyDrop;
-use std::fmt;
 use windows_core::{BSTR, HRESULT};
 
 // Windows.Win32.Foundation.FILETIME
 #[repr(C)]
-#[derive(Default)]
+#[derive(Default, Debug, Clone, Copy)]
 pub struct FILETIME {
     pub dwLowDateTime: u32,
     pub dwHighDateTime: u32,
 }
+
+impl FILETIME {
+    pub fn as_u64(&self) -> u64 {
+        ((self.dwHighDateTime as u64) << 32) | (self.dwLowDateTime as u64)
+    }
+}
+
 // Windows.Win32.System.Com.SAFEARRAYBOUND
 #[repr(C)]
 pub struct SAFEARRAYBOUND {
@@ -52,13 +59,26 @@ pub enum Variant {
     Unsigned(u64),
     Unknown,
 }
+
 impl fmt::Debug for Variant {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match self {
             Self::Bstr(bstr) => core::write!(f, "{bstr}"),
             Self::Bool(bool) => core::write!(f, "{bool}"),
             Self::Signed(i64) => core::write!(f, "[int]{i64}"),
             Self::Unsigned(u64) => core::write!(f, "[uint]{u64}"),
+            Self::Unknown => core::write!(f, "<unknown>"),
+        }
+    }
+}
+
+impl fmt::Display for Variant {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match self {
+            Self::Bstr(bstr) => core::write!(f, "{bstr}"),
+            Self::Bool(bool) => core::write!(f, "{bool}"),
+            Self::Signed(i64) => core::write!(f, "{i64}"),
+            Self::Unsigned(u64) => core::write!(f, "{u64}"),
             Self::Unknown => core::write!(f, "<unknown>"),
         }
     }

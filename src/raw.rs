@@ -1,3 +1,5 @@
+use core::fmt;
+
 use crate::defs::*;
 
 use windows_core::{interface, IUnknown, IUnknown_Vtbl, GUID};
@@ -5,7 +7,7 @@ use windows_result::HRESULT;
 use windows_strings::BSTR;
 
 #[repr(transparent)]
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct InstanceState {
     value: i32,
 }
@@ -19,6 +21,19 @@ impl InstanceState {
     pub const eComplete: Self = Self {
         value: u32::MAX as i32,
     };
+}
+
+impl fmt::Display for InstanceState {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        if *self == InstanceState::eNone {
+            f.write_str("None")
+        } else if *self == InstanceState::eComplete {
+            f.write_str("Complete")
+        } else {
+            // TODO: Do better than a raw value
+            f.write_fmt(format_args!("Incomplete({})", self.value))
+        }
+    }
 }
 
 #[interface("b41463c3-8866-43b5-bc33-2b0676f7f42e")]
