@@ -1,0 +1,23 @@
+name: install-msvc
+
+on:
+  push:
+    branches: ["install"]
+  pull_request:
+    branches: ["install"]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build install-msvc
+        run: cd crates/install-msvc && cargo rustc --release -- -C target-feature=+crt-static -C link-arg=/NODEFAULTLIB:libucrt.lib -C link-arg=/DEFAULTLIB:ucrt.lib
+      - uses: actions/upload-artifact@v4
+        with:
+          name: install-msvc
+          path: target/release/install-msvc.exe
