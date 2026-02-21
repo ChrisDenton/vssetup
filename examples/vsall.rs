@@ -19,7 +19,7 @@ fn main() -> Result<(), HRESULT> {
     }
 
     let setup = SetupConfiguration::new()?;
-    let mut first = false;
+    let mut first = true;
     for instance in setup.EnumInstances()? {
         if first {
             first = false;
