@@ -104,7 +104,7 @@ fn main() -> Result<(), HRESULT> {
                 println!("        chip: {}", package.GetChip()?);
                 println!("        isExtension: {}", package.GetIsExtension()?);
                 println!("        language: {}", package.GetLanguage()?);
-                println!("        }}");
+                println!("    }}");
             }
             println!("]");
         }
