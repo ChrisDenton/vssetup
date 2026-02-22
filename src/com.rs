@@ -6,7 +6,7 @@
 //! **WARNGING**: Using any API in this crate after COM is unitilized is Undefined Behaviour (UB).
 //! If in doubt it is safer to simply not call [`uninitialize`].
 
-use windows_core::HRESULT;
+use windows_result::HRESULT;
 
 /// Runs the given function with COM initalized and uninitalizes COM afterward.
 ///

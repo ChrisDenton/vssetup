@@ -44,12 +44,13 @@ pub use windows_strings::BSTR;
 pub use defs::FILETIME;
 pub use defs::Variant;
 
+use crate::raw::GUID;
+use crate::raw::Interface;
 use core::marker::PhantomData;
 use core::ops::Deref;
 use core::ptr::NonNull;
 use core::ptr::null_mut as null;
-use windows_core::Interface;
-use windows_core::{GUID, PCWSTR};
+use windows_strings::PCWSTR;
 
 #[doc(hidden)]
 pub use windows_strings::w;
@@ -209,6 +210,17 @@ impl SetupConfiguration {
             setup.EnumAllInstances(&mut instances).ok_hresult()?;
             let instances = instances.assert_ok()?;
             Ok(EnumSetupInstances::from_raw(instances))
+        }
+    }
+
+    pub fn GetInstanceForCurrentProcess(&self) -> Result<SetupInstance, HRESULT> {
+        unsafe {
+            let mut instance = None;
+            self.com_ptr()
+                .GetInstanceForCurrentProcess(&mut instance)
+                .ok_hresult()?;
+            let instance = instance.assert_ok()?;
+            Ok(SetupInstance::from_raw(instance))
         }
     }
 

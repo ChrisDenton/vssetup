@@ -1,6 +1,7 @@
 use core::fmt;
 use core::mem::ManuallyDrop;
-use windows_core::{BSTR, HRESULT};
+use windows_result::HRESULT;
+use windows_strings::BSTR;
 
 // Windows.Win32.Foundation.FILETIME
 #[repr(C)]
