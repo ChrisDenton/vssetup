@@ -29,6 +29,7 @@
 // We should use the same style as the official documentation
 #![allow(nonstandard_style)]
 #![allow(clippy::upper_case_acronyms)]
+#![no_std]
 
 mod defs;
 use defs::*;
