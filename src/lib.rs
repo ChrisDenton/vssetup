@@ -39,18 +39,13 @@ use raw::*;
 pub mod com;
 
 pub use windows_result::HRESULT;
-pub use windows_strings::BSTR;
+pub use windows_strings::{BSTR, PCWSTR};
 
-pub use defs::FILETIME;
-pub use defs::Variant;
-
-use crate::raw::GUID;
-use crate::raw::Interface;
 use core::marker::PhantomData;
 use core::ops::Deref;
 use core::ptr::NonNull;
 use core::ptr::null_mut as null;
-use windows_strings::PCWSTR;
+use raw::Interface;
 
 #[doc(hidden)]
 pub use windows_strings::w;

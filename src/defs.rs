@@ -1,5 +1,7 @@
+use core::ffi::c_void;
 use core::fmt;
 use core::mem::ManuallyDrop;
+use core::ptr::NonNull;
 use windows_result::HRESULT;
 use windows_strings::BSTR;
 
@@ -128,6 +130,41 @@ pub union VARIANT_DATA {
     bstrVal: ManuallyDrop<BSTR>,
     // This is necessary to correctly size the union for types we don't support.
     __unknown__: [*mut (); 2],
+}
+
+#[repr(C)]
+#[derive(Clone, Copy, PartialEq, Eq)]
+pub struct GUID {
+    pub data1: u32,
+    pub data2: u16,
+    pub data3: u16,
+    pub data4: [u8; 8],
+}
+
+#[derive(Clone, Copy)]
+#[repr(transparent)]
+pub struct IUnknown(NonNull<c_void>);
+
+#[repr(C)]
+pub struct IUnknown_Vtbl {
+    pub QueryInterface: unsafe extern "system" fn(
+        this: *mut c_void,
+        iid: *const GUID,
+        interface: *mut *mut c_void,
+    ) -> HRESULT,
+    pub AddRef: unsafe extern "system" fn(this: *mut c_void) -> u32,
+    pub Release: unsafe extern "system" fn(this: *mut c_void) -> u32,
+}
+
+impl GUID {
+    pub const fn from_u128(n: u128) -> Self {
+        Self {
+            data1: (n >> 96) as u32,
+            data2: (n >> 80) as u16,
+            data3: (n >> 64) as u16,
+            data4: (n as u64).to_be_bytes(),
+        }
+    }
 }
 
 pub const CLSCTX_ALL: u32 = 23;
